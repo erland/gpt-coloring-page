@@ -35,3 +35,21 @@ Ladda gärna upp filerna i `knowledge/` som kunskapsfiler.
 Aktivera bildgenerering.
 Web browsing behövs normalt inte.
 
+
+## Distributionspaket
+
+Repositoryt kan bygga två distributionsformat från samma aktuella GPT-konfiguration:
+
+- `coloring-page-custom-gpt-vX.Y.Z.zip` för installation/uppdatering av Custom GPT.
+- `coloring-page-chat-vX.Y.Z.zip` för att bifogas direkt i en vanlig ChatGPT-konversation.
+
+Kör lokalt:
+
+```bash
+python3 scripts/build_distributions.py
+python3 scripts/validate_distributions.py
+```
+
+Vanliga byggen använder `VERSION`. Vid en publicerad GitHub Release används release-taggen som versionskälla. En release `v1.1.0` producerar automatiskt båda `...v1.1.0.zip` och bifogar dem till releasen.
+
+Custom GPT-paketets huvudinstruktion, conversation starters och tre Knowledge-filer kopieras utan innehållsförändring från de kanoniska källorna.
