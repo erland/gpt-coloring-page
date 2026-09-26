@@ -67,7 +67,7 @@ def build(version: str):
 
     # Portable chat package.
     copy_file(ROOT / "portable/START-HERE.md", chat / "START-HERE.md")
-    copy_file(ROOT / "gpt-instructions.md", chat / "assistant/instructions.md")
+    copy_file(ROOT / "assistant/instructions.md", chat / "assistant/instructions.md")
     copy_file(ROOT / "conversation-starters.md", chat / "assistant/conversation-starters.md")
     for f in KNOWLEDGE:
         copy_file(ROOT / "knowledge" / f, chat / "knowledge" / f)
