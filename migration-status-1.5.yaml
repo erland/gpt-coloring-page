@@ -11,10 +11,11 @@ migration:
   total_steps: 7
 
 progress:
-  current_step: 2
-  last_completed_step: 1
+  current_step: 3
+  last_completed_step: 2
   completed_steps:
     - 1
+    - 2
   skipped_steps: []
   inserted_steps: []
 
@@ -36,6 +37,20 @@ preservation:
   preserve_black_and_white_coloring_rules: true
   preserve_fallback_behavior: true
 
+gpt_builder_1_5:
+  normalized_contract: gpt-builder-1.5-contract.yaml
+  validation: scripts/validate_gpt_builder_1_5_contract.py
+  canonical_instruction: assistant/instructions.md
+  legacy_instruction_byte_identical: true
+  image_generation_required: true
+  a4_portrait_default_preserved: true
+  age_complexity_adaptation_preserved: true
+  coloring_black_and_white_rules_preserved: true
+  fallback_behavior_preserved: true
+  knowledge_3_of_3_preserved: true
+  version_1_0_0_preserved: true
+  status: passed
+
 runtime_baseline:
   active:
     - chat
@@ -46,8 +61,8 @@ runtime_baseline:
     - openai_plugin
 
 next_step:
-  recommended: 2
-  title: Normalisera GPT Byggaren 1.5-kontrakten
-  reason: "Baseline och canonical instruktion är etablerade utan beteendeförändring."
+  recommended: 3
+  title: Normalisera Chat och Custom GPT
+  reason: "Capability-, artifact-, workspace/state- och tool-kontrakten är nu explicit normaliserade och maskinellt validerade."
 
-human_readable_status: "Steg 1 av 7 i GPT Byggaren 1.5.0-migreringen är klart."
+human_readable_status: "Steg 1–2 av 7 i GPT Byggaren 1.5.0-migreringen är klara."
