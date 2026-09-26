@@ -45,6 +45,9 @@ jobs:
       - name: Validate OpenAI Plugin compatibility
         run: python3 scripts/validate_openai_plugin_compatibility.py
 
+      - name: Validate runtime distribution registry
+        run: python3 scripts/validate_runtime_distribution_registry.py
+
       - name: Build distributions
         run: python3 scripts/build_distributions.py --version "${{ steps.version.outputs.version }}"
 
