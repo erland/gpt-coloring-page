@@ -39,6 +39,9 @@ jobs:
       - name: Validate GPT Builder 1.5 canonical contract
         run: python3 scripts/validate_gpt_builder_1_5_contract.py
 
+      - name: Validate Claude and OpenCode compatibility
+        run: python3 scripts/validate_claude_opencode_compatibility.py
+
       - name: Build distributions
         run: python3 scripts/build_distributions.py --version "${{ steps.version.outputs.version }}"
 
