@@ -85,10 +85,17 @@ runtime_policy:
       compatibility: equivalent_runtime_dependent
     custom-gpt:
       compatibility: equivalent_with_platform_constraints
-  assessment_pending:
+  inactive:
     claude:
-      compatibility: assessment_pending
+      compatibility: reduced
+      activation: not_active
+      blocker: critical_image_generation_not_guaranteed
+      assessment: docs/claude-opencode-compatibility.md
     opencode:
-      compatibility: assessment_pending
+      compatibility: reduced
+      activation: not_active
+      blocker: critical_image_generation_not_guaranteed
+      assessment: docs/claude-opencode-compatibility.md
+  assessment_pending:
     openai_plugin:
       compatibility: assessment_pending
