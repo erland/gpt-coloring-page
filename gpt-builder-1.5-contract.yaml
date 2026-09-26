@@ -1,0 +1,94 @@
+schema_version: 1
+builder:
+  target_version: 1.5.0
+  strategy: normalize_existing_canonical_contract
+  behavior_preserving: true
+
+canonical:
+  project_contract: gpt-project.yaml
+  instruction: assistant/instructions.md
+  legacy_instruction: gpt-instructions.md
+  version_file: VERSION
+  knowledge_root: knowledge
+
+contracts:
+  capabilities:
+    critical:
+      - image_generation
+    required:
+      - printable_a4_layout
+      - age_complexity_adaptation
+      - coloring_line_art_generation
+      - reference_plus_coloring_layout
+      - fallback_prompt_behavior
+    optional:
+      - image_upload_and_analysis
+
+  artifacts:
+    required:
+      printable_coloring_page:
+        page_format: A4_portrait
+        modes:
+          - coloring_only
+          - colored_reference_plus_coloring
+      coloring_section:
+        color: false
+        grayscale: false
+        shading: false
+        white_fill_areas: true
+        thick_clean_outlines: true
+      colored_reference:
+        conditional: true
+        max_page_height_percent: 25
+
+  state:
+    authority:
+      current_request: current_user_requirements
+      guidance: canonical_instruction_plus_knowledge
+    conversation_only_authority_for_long_projects: true
+    preserve_user_selected_mode: true
+    preserve_age_or_difficulty: true
+
+  tools:
+    required:
+      - id: image-generation
+        purpose: create_printable_coloring_page
+    supporting:
+      - id: image-input
+        purpose: analyze_user_supplied_reference_when_present
+
+behavior:
+  default_page_format: A4_portrait
+  default_mode_when_subject_and_age_only: colored_reference_plus_coloring
+  max_reference_height_percent: 25
+  coloring_section_must_be_black_and_white: true
+  coloring_section_may_use_grayscale: false
+  coloring_section_may_use_shading: false
+  age_complexity_adaptation_required: true
+  unnecessary_questions_for_complete_request: false
+  fallback_for_restricted_named_character_requests: propose_nearby_safe_alternative
+
+knowledge:
+  expected_files: 3
+  files:
+    - age-complexity-guide.md
+    - layout-and-print-guide.md
+    - fallback-prompt-guide.md
+
+release_policy:
+  current_version: 1.0.0
+  preserve_version_during_migration: true
+
+runtime_policy:
+  active:
+    chat:
+      compatibility: equivalent_runtime_dependent
+    custom-gpt:
+      compatibility: equivalent_with_platform_constraints
+  assessment_pending:
+    claude:
+      compatibility: assessment_pending
+    opencode:
+      compatibility: assessment_pending
+    openai_plugin:
+      compatibility: assessment_pending
