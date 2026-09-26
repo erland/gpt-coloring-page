@@ -53,3 +53,18 @@ python3 scripts/validate_distributions.py
 Vanliga byggen använder `VERSION`. Vid en publicerad GitHub Release används release-taggen som versionskälla. En release `v1.1.0` producerar automatiskt båda `...v1.1.0.zip` och bifogar dem till releasen.
 
 Custom GPT-paketets huvudinstruktion, conversation starters och tre Knowledge-filer kopieras utan innehållsförändring från de kanoniska källorna.
+
+## GPT Byggaren 1.5.0
+
+Migreringen är **7/7 komplett**. Canonical instruktion finns i `assistant/instructions.md`; `gpt-instructions.md` behålls som legacy-kompatibel paketeringsyta för Custom GPT. Build, validering och aktivt distributionsset härleds från `runtime-distribution-registry.yaml`.
+
+Bevarat genom migreringen:
+- version `1.0.0`
+- 3/3 Knowledge-filer
+- A4 portrait som standardformat
+- referensbild max 25 % av sidans höjd
+- svartvit målarbild utan gråskala eller skuggning
+- åldersanpassad detaljnivå
+- befintligt fallback-beteende
+
+Aktiva runtimes är Chat och Custom GPT. Claude Projects, OpenCode och OpenAI Plugin är compatibility-bedömda men inte aktiva distributionsmål.

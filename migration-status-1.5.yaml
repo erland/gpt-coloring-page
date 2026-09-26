@@ -1,0 +1,152 @@
+schema_version: 1
+project:
+  id: coloring-page
+  name: Målarbilds-generatorn
+  version: 1.0.0
+
+migration:
+  target_builder_version: 1.5.0
+  strategy: behavior_preserving
+  plan: docs/gpt-builder-1.5-runtime-migration.md
+  total_steps: 7
+
+progress:
+  current_step: 7
+  last_completed_step: 7
+  completed_steps:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+  skipped_steps: []
+  inserted_steps: []
+
+state:
+  overall: pass
+  blocking_issues: []
+  warnings:
+    - "Claude, OpenCode och OpenAI Plugin är ännu inte compatibility-bedömda och är därför inte aktiva."
+
+preservation:
+  legacy_instruction: gpt-instructions.md
+  canonical_instruction: assistant/instructions.md
+  legacy_instruction_byte_identical: true
+  preserve_version_1_0_0: true
+  preserve_knowledge_3_of_3: true
+  preserve_image_generation_required: true
+  preserve_a4_portrait_default: true
+  preserve_age_complexity_adaptation: true
+  preserve_black_and_white_coloring_rules: true
+  preserve_fallback_behavior: true
+
+gpt_builder_1_5:
+  normalized_contract: gpt-builder-1.5-contract.yaml
+  validation: scripts/validate_gpt_builder_1_5_contract.py
+  canonical_instruction: assistant/instructions.md
+  legacy_instruction_byte_identical: true
+  image_generation_required: true
+  a4_portrait_default_preserved: true
+  age_complexity_adaptation_preserved: true
+  coloring_black_and_white_rules_preserved: true
+  fallback_behavior_preserved: true
+  knowledge_3_of_3_preserved: true
+  version_1_0_0_preserved: true
+  status: passed
+
+chat_custom_normalization:
+  status: passed
+  canonical_instruction_source: assistant/instructions.md
+  custom_gpt_packaging_path: gpt-instructions.md
+  chat_instruction_path: assistant/instructions.md
+  both_built_from_same_canonical_source: true
+  knowledge_3_of_3_in_both: true
+  critical_image_generation_rules_verified: true
+  a4_layout_rules_verified: true
+  age_complexity_rules_verified: true
+  version_1_0_0_preserved: true
+
+runtime_baseline:
+  active:
+    - chat
+    - custom-gpt
+  inactive:
+    claude:
+      compatibility: reduced
+      blocker: critical_image_generation_not_guaranteed
+      assessment: docs/claude-opencode-compatibility.md
+    opencode:
+      compatibility: reduced
+      blocker: critical_image_generation_not_guaranteed
+      assessment: docs/claude-opencode-compatibility.md
+  inactive:
+    openai_plugin:
+      status: assessed_not_active
+      compatibility: reduced
+      advisory_only: true
+      blocker: critical_image_generation_not_guaranteed
+      assessment: docs/openai-plugin-compatibility.md
+
+claude_opencode_assessment:
+  status: passed
+  assessment: docs/claude-opencode-compatibility.md
+  canonical_behavior_changed: false
+  claude:
+    compatibility: reduced
+    activation: not_active
+    blocker: critical_image_generation_not_guaranteed
+  opencode:
+    compatibility: reduced
+    activation: not_active
+    blocker: critical_image_generation_not_guaranteed
+
+plugin_assessment:
+  status: passed
+  runtime: openai_plugin
+  compatibility: reduced
+  activation: not_active
+  advisory_only: true
+  blocker: critical_image_generation_not_guaranteed
+  assessment: docs/openai-plugin-compatibility.md
+  canonical_behavior_changed: false
+
+runtime_registry:
+  source_of_truth: runtime-distribution-registry.yaml
+  validation: scripts/validate_runtime_distribution_registry.py
+  active_targets:
+    - chat
+    - custom-gpt
+  exact_artifact_set: true
+  wildcard_runtime_selection: false
+  build_targets_derived_from_registry: true
+  validation_targets_derived_from_registry: true
+
+final_readiness:
+  status: ready_for_merge_after_ci
+  migration_steps_complete: 7
+  migration_steps_total: 7
+  final_gate: scripts/validate_gpt_builder_1_5_migration.py
+  canonical_behavior_preserved: true
+  version_1_0_0_preserved: true
+  knowledge_3_of_3_preserved: true
+  a4_portrait_default_preserved: true
+  reference_max_25_percent_preserved: true
+  black_and_white_no_grayscale_no_shading_preserved: true
+  age_complexity_adaptation_preserved: true
+  fallback_behavior_preserved: true
+  active_targets:
+    - chat
+    - custom-gpt
+  inactive_targets:
+    - claude
+    - opencode
+    - openai_plugin
+
+next_step:
+  recommended: null
+  title: Migration complete
+  reason: "GPT Byggaren 1.5.0-migreringen är 7/7 komplett."
+
+human_readable_status: "Steg 1–7 av 7 i GPT Byggaren 1.5.0-migreringen är klara. Väntar endast på grön slut-CI för merge-readiness."

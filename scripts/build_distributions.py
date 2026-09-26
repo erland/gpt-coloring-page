@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import argparse, hashlib, json, os, re, shutil, zipfile
+import argparse, hashlib, json, os, re, shutil, zipfile, yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
@@ -42,8 +42,18 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def registry_targets():
+    r=yaml.safe_load((ROOT / "runtime-distribution-registry.yaml").read_text(encoding="utf-8"))
+    targets=list(r.get("active_targets",[]) or [])
+    supported={"chat","custom-gpt"}
+    unknown=set(targets)-supported
+    if unknown:
+        raise SystemExit(f"Registry contains unsupported active targets: {sorted(unknown)}")
+    return targets
+
 def build(version: str):
     version = validate_version(version)
+    targets = registry_targets()
     for f in KNOWLEDGE:
         if not (ROOT / "knowledge" / f).is_file():
             raise SystemExit(f"Saknad Knowledge-fil: {f}")
@@ -53,44 +63,52 @@ def build(version: str):
     stage = ROOT / ".build-distributions"
     shutil.rmtree(stage, ignore_errors=True)
     custom, chat = stage / "custom", stage / "chat"
-    custom.mkdir(parents=True)
-    chat.mkdir(parents=True)
+    if "custom-gpt" in targets:
+        custom.mkdir(parents=True)
+    if "chat" in targets:
+        chat.mkdir(parents=True)
 
     # Custom GPT package: preserve current behavior-bearing files byte-for-byte.
-    for rel in ["README.md", "gpt-instructions.md", "conversation-starters.md"]:
-        copy_file(ROOT / rel, custom / rel)
-    for f in KNOWLEDGE:
-        copy_file(ROOT / "knowledge" / f, custom / "knowledge" / f)
-    if (ROOT / "examples/example-prompts.md").is_file():
-        copy_file(ROOT / "examples/example-prompts.md", custom / "examples/example-prompts.md")
-    (custom / "VERSION").write_text(version + "\n", encoding="utf-8")
+    if "custom-gpt" in targets:
+        copy_file(ROOT / "README.md", custom / "README.md")
+        copy_file(ROOT / "assistant/instructions.md", custom / "gpt-instructions.md")
+        copy_file(ROOT / "conversation-starters.md", custom / "conversation-starters.md")
+        for f in KNOWLEDGE:
+            copy_file(ROOT / "knowledge" / f, custom / "knowledge" / f)
+        if (ROOT / "examples/example-prompts.md").is_file():
+            copy_file(ROOT / "examples/example-prompts.md", custom / "examples/example-prompts.md")
+        (custom / "VERSION").write_text(version + "\n", encoding="utf-8")
 
     # Portable chat package.
-    copy_file(ROOT / "portable/START-HERE.md", chat / "START-HERE.md")
-    copy_file(ROOT / "gpt-instructions.md", chat / "assistant/instructions.md")
-    copy_file(ROOT / "conversation-starters.md", chat / "assistant/conversation-starters.md")
-    for f in KNOWLEDGE:
-        copy_file(ROOT / "knowledge" / f, chat / "knowledge" / f)
-    if (ROOT / "examples/example-prompts.md").is_file():
-        copy_file(ROOT / "examples/example-prompts.md", chat / "examples/example-prompts.md")
-    (chat / "VERSION").write_text(version + "\n", encoding="utf-8")
+    if "chat" in targets:
+        copy_file(ROOT / "portable/START-HERE.md", chat / "START-HERE.md")
+        copy_file(ROOT / "assistant/instructions.md", chat / "assistant/instructions.md")
+        copy_file(ROOT / "conversation-starters.md", chat / "assistant/conversation-starters.md")
+        for f in KNOWLEDGE:
+            copy_file(ROOT / "knowledge" / f, chat / "knowledge" / f)
+        if (ROOT / "examples/example-prompts.md").is_file():
+            copy_file(ROOT / "examples/example-prompts.md", chat / "examples/example-prompts.md")
+        (chat / "VERSION").write_text(version + "\n", encoding="utf-8")
 
-    files = {}
-    for p in sorted(chat.rglob("*")):
-        if p.is_file() and p.name != "MANIFEST.json":
-            files[str(p.relative_to(chat)).replace(os.sep, "/")] = sha256(p)
-    (chat / "MANIFEST.json").write_text(json.dumps({
-        "package": "coloring-page",
-        "format": "portable-chat-assistant",
-        "version": version,
-        "entrypoint": "START-HERE.md",
-        "instructions": "assistant/instructions.md",
-        "knowledge_count": len(KNOWLEDGE),
-        "files": files,
-    }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if "chat" in targets:
+        files = {}
+        for p in sorted(chat.rglob("*")):
+            if p.is_file() and p.name != "MANIFEST.json":
+                files[str(p.relative_to(chat)).replace(os.sep, "/")] = sha256(p)
+        (chat / "MANIFEST.json").write_text(json.dumps({
+            "package": "coloring-page",
+            "format": "portable-chat-assistant",
+            "version": version,
+            "entrypoint": "START-HERE.md",
+            "instructions": "assistant/instructions.md",
+            "knowledge_count": len(KNOWLEDGE),
+            "files": files,
+        }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    zip_dir(custom, DIST / f"coloring-page-custom-gpt-v{version}.zip")
-    zip_dir(chat, DIST / f"coloring-page-chat-v{version}.zip")
+    if "custom-gpt" in targets:
+        zip_dir(custom, DIST / f"coloring-page-custom-gpt-v{version}.zip")
+    if "chat" in targets:
+        zip_dir(chat, DIST / f"coloring-page-chat-v{version}.zip")
     shutil.rmtree(stage, ignore_errors=True)
 
 
