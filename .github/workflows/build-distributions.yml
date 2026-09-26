@@ -36,6 +36,9 @@ jobs:
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Validate GPT Builder 1.5 canonical contract
+        run: python3 scripts/validate_gpt_builder_1_5_contract.py
+
       - name: Build distributions
         run: python3 scripts/build_distributions.py --version "${{ steps.version.outputs.version }}"
 
