@@ -1,0 +1,49 @@
+schema_version: 1
+project:
+  id: coloring-page
+  name: Målarbilds-generatorn
+  profile: guided_creative
+
+instructions:
+  canonical: assistant/instructions.md
+  legacy_source: gpt-instructions.md
+  preserve_legacy_source_byte_identical: true
+
+knowledge_architecture:
+  canonical_root: knowledge
+  expected_files: 3
+
+runtime:
+  chat_zip:
+    enabled: true
+  custom_gpt:
+    enabled: true
+    instruction:
+      source: assistant/instructions.md
+      packaging_path: gpt-instructions.md
+      max_characters: 8000
+    knowledge:
+      strategy: exact_list
+      expected_files: 3
+  claude:
+    enabled: false
+    compatibility: assessment_pending
+  opencode:
+    enabled: false
+    compatibility: assessment_pending
+  openai_plugin:
+    enabled: false
+    compatibility: assessment_pending
+
+capabilities:
+  critical:
+    - image_generation
+  important:
+    - image_upload_and_analysis
+    - printable_layout_guidance
+    - age_complexity_adaptation
+
+release:
+  version_file: VERSION
+  preserve_current_version: true
+  current_version: 1.0.0
