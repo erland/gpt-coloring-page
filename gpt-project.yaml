@@ -21,6 +21,7 @@ runtime:
     instruction:
       source: assistant/instructions.md
       packaging_path: gpt-instructions.md
+      legacy_packaging_path_only: true
       max_characters: 8000
     knowledge:
       strategy: exact_list
