@@ -34,8 +34,8 @@ def main(version):
                 raise SystemExit(f"Korrupt ZIP {p.name}: {bad}")
 
     with zipfile.ZipFile(custom) as z:
-        if read(z, "gpt-instructions.md") != (ROOT / "gpt-instructions.md").read_bytes():
-            raise SystemExit("Custom GPT-instruktionen avviker")
+        if read(z, "gpt-instructions.md") != (ROOT / "assistant/instructions.md").read_bytes():
+            raise SystemExit("Custom GPT-instruktionen avviker från canonical källa")
         if read(z, "conversation-starters.md") != (ROOT / "conversation-starters.md").read_bytes():
             raise SystemExit("Custom GPT starters avviker")
         for f in KNOWLEDGE:
@@ -43,15 +43,35 @@ def main(version):
                 raise SystemExit(f"Custom Knowledge avviker: {f}")
         if read(z, "VERSION").decode().strip() != version:
             raise SystemExit("Fel VERSION i Custom GPT-paket")
+        custom_instr = read(z, "gpt-instructions.md").decode("utf-8")
+        for marker in [
+            "Skapa i första hand en A4-stående bild, lämplig för utskrift.",
+            "The colored reference must fill maximum 25% of the page height.",
+            "No shading.",
+            "No gray tones.",
+            "Anpassa alltid detaljnivån:",
+        ]:
+            if marker not in custom_instr:
+                raise SystemExit(f"Custom GPT saknar kritisk beteendemarkör: {marker}")
 
     with zipfile.ZipFile(chat) as z:
-        if read(z, "assistant/instructions.md") != (ROOT / "gpt-instructions.md").read_bytes():
-            raise SystemExit("Portable instruktion avviker")
+        if read(z, "assistant/instructions.md") != (ROOT / "assistant/instructions.md").read_bytes():
+            raise SystemExit("Portable instruktion avviker från canonical källa")
         if read(z, "assistant/conversation-starters.md") != (ROOT / "conversation-starters.md").read_bytes():
             raise SystemExit("Portable starters avviker")
         for f in KNOWLEDGE:
             if read(z, f"knowledge/{f}") != (ROOT / "knowledge" / f).read_bytes():
                 raise SystemExit(f"Portable Knowledge avviker: {f}")
+        chat_instr = read(z, "assistant/instructions.md").decode("utf-8")
+        for marker in [
+            "Skapa i första hand en A4-stående bild, lämplig för utskrift.",
+            "The colored reference must fill maximum 25% of the page height.",
+            "No shading.",
+            "No gray tones.",
+            "Anpassa alltid detaljnivån:",
+        ]:
+            if marker not in chat_instr:
+                raise SystemExit(f"Chat saknar kritisk beteendemarkör: {marker}")
         manifest = json.loads(read(z, "MANIFEST.json"))
         if manifest["version"] != version or manifest["knowledge_count"] != len(KNOWLEDGE):
             raise SystemExit("Fel version/knowledge_count i portable manifest")
