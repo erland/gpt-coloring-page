@@ -42,6 +42,9 @@ jobs:
       - name: Validate Claude and OpenCode compatibility
         run: python3 scripts/validate_claude_opencode_compatibility.py
 
+      - name: Validate OpenAI Plugin compatibility
+        run: python3 scripts/validate_openai_plugin_compatibility.py
+
       - name: Build distributions
         run: python3 scripts/build_distributions.py --version "${{ steps.version.outputs.version }}"
 
