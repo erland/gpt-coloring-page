@@ -11,13 +11,14 @@ migration:
   total_steps: 7
 
 progress:
-  current_step: 5
-  last_completed_step: 4
+  current_step: 6
+  last_completed_step: 5
   completed_steps:
     - 1
     - 2
     - 3
     - 4
+    - 5
   skipped_steps: []
   inserted_steps: []
 
@@ -78,8 +79,13 @@ runtime_baseline:
       compatibility: reduced
       blocker: critical_image_generation_not_guaranteed
       assessment: docs/claude-opencode-compatibility.md
-  assessment_pending:
-    - openai_plugin
+  inactive:
+    openai_plugin:
+      status: assessed_not_active
+      compatibility: reduced
+      advisory_only: true
+      blocker: critical_image_generation_not_guaranteed
+      assessment: docs/openai-plugin-compatibility.md
 
 claude_opencode_assessment:
   status: passed
@@ -94,9 +100,19 @@ claude_opencode_assessment:
     activation: not_active
     blocker: critical_image_generation_not_guaranteed
 
-next_step:
-  recommended: 5
-  title: Bedöm OpenAI Plugin
-  reason: "Claude Projects och OpenCode är explicit bedömda som reduced/not active eftersom kritisk Image generation-parity inte kan garanteras utan att ändra produktbeteendet."
+plugin_assessment:
+  status: passed
+  runtime: openai_plugin
+  compatibility: reduced
+  activation: not_active
+  advisory_only: true
+  blocker: critical_image_generation_not_guaranteed
+  assessment: docs/openai-plugin-compatibility.md
+  canonical_behavior_changed: false
 
-human_readable_status: "Steg 1–4 av 7 i GPT Byggaren 1.5.0-migreringen är klara."
+next_step:
+  recommended: 6
+  title: Generalisera build, parity, CI och release
+  reason: "OpenAI Plugin är explicit bedömd som reduced/advisory-only och lämnas inaktiv eftersom kritisk Image generation-parity inte kan garanteras."
+
+human_readable_status: "Steg 1–5 av 7 i GPT Byggaren 1.5.0-migreringen är klara."
