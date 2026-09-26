@@ -30,7 +30,7 @@ def main() -> int:
 
     for marker in [
         "faktiskt skapa utskrivbara målarbilder",
-        "kritisk capability:",
+        "Kritisk capability:",
         "Ingen Plugin-distribution byggs",
         "svartvit målarbild utan gråskala/skuggning",
     ]:
