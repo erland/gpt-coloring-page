@@ -12,7 +12,7 @@ migration:
 
 progress:
   current_step: 7
-  last_completed_step: 6
+  last_completed_step: 7
   completed_steps:
     - 1
     - 2
@@ -20,6 +20,7 @@ progress:
     - 4
     - 5
     - 6
+    - 7
   skipped_steps: []
   inserted_steps: []
 
@@ -122,9 +123,30 @@ runtime_registry:
   build_targets_derived_from_registry: true
   validation_targets_derived_from_registry: true
 
-next_step:
-  recommended: 7
-  title: Slutlig readiness och dokumentationssynk
-  reason: "Build och distributionsvalidering härleder nu exakt aktivt runtime-set från runtime-distribution-registry.yaml, och inaktiva runtimes kan inte råka följa med i release."
+final_readiness:
+  status: ready_for_merge_after_ci
+  migration_steps_complete: 7
+  migration_steps_total: 7
+  final_gate: scripts/validate_gpt_builder_1_5_migration.py
+  canonical_behavior_preserved: true
+  version_1_0_0_preserved: true
+  knowledge_3_of_3_preserved: true
+  a4_portrait_default_preserved: true
+  reference_max_25_percent_preserved: true
+  black_and_white_no_grayscale_no_shading_preserved: true
+  age_complexity_adaptation_preserved: true
+  fallback_behavior_preserved: true
+  active_targets:
+    - chat
+    - custom-gpt
+  inactive_targets:
+    - claude
+    - opencode
+    - openai_plugin
 
-human_readable_status: "Steg 1–6 av 7 i GPT Byggaren 1.5.0-migreringen är klara."
+next_step:
+  recommended: null
+  title: Migration complete
+  reason: "GPT Byggaren 1.5.0-migreringen är 7/7 komplett."
+
+human_readable_status: "Steg 1–7 av 7 i GPT Byggaren 1.5.0-migreringen är klara. Väntar endast på grön slut-CI för merge-readiness."
